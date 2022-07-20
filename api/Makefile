@@ -2,24 +2,14 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-build: go docs
+RUNTIME_DIR ?= .
+
+build: go
 
 go:
 	@find . -name '*.pb.go' -delete
 	docker run -it \
 		-v `pwd`:/build \
+		-v $(RUNTIME_DIR)/api:/api \
 		atomix/codegen:go-latest \
-	    --proto-path . --go-path . --import-path github.com/atomix/gossip/api
-	docker run -it \
-		-v `pwd`:/build \
-		atomix/codegen:latest \
-		protoc -I=.:/go/src/github.com/gogo/protobuf \
-			--go_out=Mgoogle/protobuf/descriptor.proto=github.com/golang/protobuf/protoc-gen-go/descriptor,import_path=github.com/atomix/gossip/api/atomix/gossip/v1:. \
-			atomix/gossip/v1/descriptor.proto
-
-docs:
-	@find . -name '*.md' -delete
-	docker run -it \
-		-v `pwd`:/build \
-		atomix/codegen:docs-latest \
-		--proto-path . --docs-path . --docs-format markdown
+	    --proto-path . --proto-path /api --proto-files atomix/gossip/v1/*.proto --go-path . --import-path github.com/atomix/gossip/api
