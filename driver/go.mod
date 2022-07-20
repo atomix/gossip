@@ -17,7 +17,7 @@ require (
 )
 
 require (
-	github.com/atomix/gossip-storage/api v0.0.0-20220720071319-a3005127c2c0
+	github.com/atomix/gossip-storage/api v0.0.0-20220720071901-11e628c69c29
 	github.com/atomix/runtime/sdk v0.0.0-20220720012556-f7cb9963f38a
 )
 
