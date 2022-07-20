@@ -9,7 +9,7 @@ syntax = "proto3";
 package atomix.gossip.v1;
 
 import "google/protobuf/duration.proto";
-import "atomix/runtime/v1/timestamp.proto";
+import "atomix/gossip/v1/timestamp.proto";
 import "gogoproto/gogo.proto";
 
 service Gossip {
@@ -39,13 +39,13 @@ message RequestHeader {
         (gogoproto.customname) = "MemberID",
         (gogoproto.casttype) = "MemberID"
     ];
-    atomix.runtime.v1.Timestamp timestamp = 4 [
+    Timestamp timestamp = 4 [
         (gogoproto.nullable) = false
     ];
 }
 
 message ResponseHeader {
-    atomix.runtime.v1.Timestamp timestamp = 1 [
+    Timestamp timestamp = 1 [
         (gogoproto.nullable) = false
     ];
 }
@@ -69,7 +69,7 @@ message ReadRequest {
     RequestHeader header = 1 [
         (gogoproto.nullable) = false
     ];
-    atomix.runtime.v1.Timestamp timestamp = 2 [
+    Timestamp timestamp = 2 [
         (gogoproto.nullable) = false
     ];
     string key = 3;
@@ -83,7 +83,7 @@ message ReadResponse {
 }
 
 message Object {
-    atomix.runtime.v1.Timestamp timestamp = 1 [
+    Timestamp timestamp = 1 [
         (gogoproto.nullable) = false
     ];
     string key = 2;
@@ -99,7 +99,7 @@ message GossipMessage {
 }
 
 message GossipHeader {
-    atomix.runtime.v1.Timestamp timestamp = 1 [
+    Timestamp timestamp = 1 [
         (gogoproto.nullable) = false
     ];
 }
@@ -114,7 +114,7 @@ message Advertise {
     GossipHeader header = 1 [
         (gogoproto.nullable) = false
     ];
-    atomix.runtime.v1.Timestamp timestamp = 2 [
+    Timestamp timestamp = 2 [
         (gogoproto.nullable) = false
     ];
     string key = 3;
