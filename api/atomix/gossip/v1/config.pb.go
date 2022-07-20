@@ -132,7 +132,7 @@ func (m *ClusterConfig) GetGroups() []PeerGroupConfig {
 }
 
 type ReplicaConfig struct {
-	ReplicaID ReplicaID `protobuf:"varint,1,opt,name=replica_id,json=replicaId,proto3,casttype=ReplicaID" json:"replica_id,omitempty"`
+	ReplicaID ReplicaID `protobuf:"bytes,1,opt,name=replica_id,json=replicaId,proto3,casttype=ReplicaID" json:"replica_id,omitempty"`
 	Host      string    `protobuf:"bytes,2,opt,name=host,proto3" json:"host,omitempty"`
 	Port      int32     `protobuf:"varint,3,opt,name=port,proto3" json:"port,omitempty"`
 }
@@ -174,7 +174,7 @@ func (m *ReplicaConfig) GetReplicaID() ReplicaID {
 	if m != nil {
 		return m.ReplicaID
 	}
-	return 0
+	return ""
 }
 
 func (m *ReplicaConfig) GetHost() string {
@@ -244,7 +244,7 @@ func (m *PeerGroupConfig) GetPeers() []PeerConfig {
 }
 
 type PeerConfig struct {
-	PeerID PeerID `protobuf:"varint,1,opt,name=peer_id,json=peerId,proto3,casttype=PeerID" json:"peer_id,omitempty"`
+	PeerID PeerID `protobuf:"bytes,1,opt,name=peer_id,json=peerId,proto3,casttype=PeerID" json:"peer_id,omitempty"`
 }
 
 func (m *PeerConfig) Reset()         { *m = PeerConfig{} }
@@ -284,7 +284,7 @@ func (m *PeerConfig) GetPeerID() PeerID {
 	if m != nil {
 		return m.PeerID
 	}
-	return 0
+	return ""
 }
 
 func init() {
@@ -317,7 +317,7 @@ var fileDescriptor_7fc2fc0c73445944 = []byte{
 	0xdd, 0x0e, 0x85, 0x32, 0xaf, 0xf0, 0x96, 0xa4, 0x7d, 0x55, 0x86, 0x2d, 0xb6, 0xb6, 0xe1, 0xb7,
 	0xd0, 0xc9, 0xb5, 0x5c, 0xaa, 0x22, 0xd8, 0x71, 0x80, 0xe7, 0xff, 0x02, 0x4e, 0x39, 0xd7, 0x27,
 	0x56, 0xb3, 0x81, 0xa8, 0x6d, 0x91, 0x86, 0xc1, 0xc6, 0x06, 0xfc, 0x1a, 0xa0, 0xa6, 0xcf, 0x84,
-	0x8f, 0xae, 0x9d, 0x0c, 0xab, 0x32, 0xec, 0xd6, 0xb2, 0xe9, 0xe4, 0xcf, 0xed, 0x07, 0xeb, 0xd6,
+	0x8f, 0xae, 0x9b, 0x0c, 0xab, 0x32, 0xec, 0xd6, 0xb2, 0xe9, 0xe4, 0xcf, 0xed, 0x07, 0xeb, 0xd6,
 	0xea, 0x69, 0x86, 0x31, 0xb4, 0x3f, 0xc8, 0xc2, 0xb8, 0x8c, 0xba, 0xcc, 0xd5, 0xb6, 0xa7, 0xa4,
 	0x36, 0xc1, 0xee, 0x08, 0x8d, 0xf7, 0x98, 0xab, 0xa3, 0x2f, 0x08, 0x1e, 0x6c, 0x5d, 0x85, 0x8f,
 	0xa0, 0xaf, 0x52, 0x6d, 0x84, 0xcd, 0xb0, 0x59, 0x3c, 0x48, 0x48, 0x55, 0x86, 0xbd, 0xb5, 0xd4,
@@ -326,7 +326,7 @@ var fileDescriptor_7fc2fc0c73445944 = []byte{
 	0xb6, 0x6f, 0x3e, 0x7f, 0xbf, 0x2a, 0xc3, 0x8e, 0x15, 0xb8, 0x03, 0xea, 0x8a, 0x75, 0xac, 0x68,
 	0x9a, 0x25, 0xc1, 0x55, 0x45, 0xd0, 0x75, 0x45, 0xd0, 0xef, 0x8a, 0xa0, 0xaf, 0x2b, 0xd2, 0xba,
 	0x5e, 0x91, 0xd6, 0xcf, 0x15, 0x69, 0x9d, 0x75, 0xdc, 0xdf, 0xf1, 0xf2, 0x6f, 0x00, 0x00, 0x00,
-	0xff, 0xff, 0xfa, 0xe1, 0x57, 0x51, 0x09, 0x03, 0x00, 0x00,
+	0xff, 0xff, 0x6d, 0x5c, 0xd9, 0x23, 0x09, 0x03, 0x00, 0x00,
 }
 
 func (m *GossipConfig) Marshal() (dAtA []byte, err error) {
@@ -455,10 +455,12 @@ func (m *ReplicaConfig) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x12
 	}
-	if m.ReplicaID != 0 {
-		i = encodeVarintConfig(dAtA, i, uint64(m.ReplicaID))
+	if len(m.ReplicaID) > 0 {
+		i -= len(m.ReplicaID)
+		copy(dAtA[i:], m.ReplicaID)
+		i = encodeVarintConfig(dAtA, i, uint64(len(m.ReplicaID)))
 		i--
-		dAtA[i] = 0x8
+		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
@@ -525,10 +527,12 @@ func (m *PeerConfig) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.PeerID != 0 {
-		i = encodeVarintConfig(dAtA, i, uint64(m.PeerID))
+	if len(m.PeerID) > 0 {
+		i -= len(m.PeerID)
+		copy(dAtA[i:], m.PeerID)
+		i = encodeVarintConfig(dAtA, i, uint64(len(m.PeerID)))
 		i--
-		dAtA[i] = 0x8
+		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
@@ -588,8 +592,9 @@ func (m *ReplicaConfig) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.ReplicaID != 0 {
-		n += 1 + sovConfig(uint64(m.ReplicaID))
+	l = len(m.ReplicaID)
+	if l > 0 {
+		n += 1 + l + sovConfig(uint64(l))
 	}
 	l = len(m.Host)
 	if l > 0 {
@@ -625,8 +630,9 @@ func (m *PeerConfig) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.PeerID != 0 {
-		n += 1 + sovConfig(uint64(m.PeerID))
+	l = len(m.PeerID)
+	if l > 0 {
+		n += 1 + l + sovConfig(uint64(l))
 	}
 	return n
 }
@@ -907,10 +913,10 @@ func (m *ReplicaConfig) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ReplicaID", wireType)
 			}
-			m.ReplicaID = 0
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowConfig
@@ -920,11 +926,24 @@ func (m *ReplicaConfig) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.ReplicaID |= ReplicaID(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthConfig
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthConfig
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ReplicaID = ReplicaID(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Host", wireType)
@@ -1130,10 +1149,10 @@ func (m *PeerConfig) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field PeerID", wireType)
 			}
-			m.PeerID = 0
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowConfig
@@ -1143,11 +1162,24 @@ func (m *PeerConfig) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.PeerID |= PeerID(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthConfig
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthConfig
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.PeerID = PeerID(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipConfig(dAtA[iNdEx:])

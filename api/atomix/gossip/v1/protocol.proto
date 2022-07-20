@@ -18,9 +18,14 @@ service Gossip {
     rpc Gossip (stream GossipMessage) returns (stream GossipMessage);
 }
 
+message PrimitiveType {
+    string name = 1;
+    string version = 2;
+}
+
 message PrimitiveId {
-    string type = 1 [
-        (gogoproto.casttype) = "PrimitiveType"
+    PrimitiveType type = 1 [
+        (gogoproto.nullable) = false
     ];
     string cluster = 2;
     string name = 3;

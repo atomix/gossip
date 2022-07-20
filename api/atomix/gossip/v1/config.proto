@@ -30,7 +30,7 @@ message ClusterConfig {
 }
 
 message ReplicaConfig {
-    uint64 replica_id = 1 [
+    string replica_id = 1 [
         (gogoproto.customname) = "ReplicaID",
         (gogoproto.casttype) = "ReplicaID"
     ];
@@ -49,7 +49,7 @@ message PeerGroupConfig {
 }
 
 message PeerConfig {
-    uint64 peer_id = 1 [
+    string peer_id = 1 [
         (gogoproto.customname) = "PeerID",
         (gogoproto.casttype) = "PeerID"
     ];
