@@ -4,6 +4,6 @@
 
 package main
 
-import "github.com/atomix/gossip/driver"
+import "github.com/atomix/gossip-storage/driver"
 
 var Plugin = driver.Driver

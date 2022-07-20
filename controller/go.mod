@@ -1,4 +1,4 @@
-module github.com/atomix/gossip/controller
+module github.com/atomix/gossip-storage/controller
 
 go 1.18
 
