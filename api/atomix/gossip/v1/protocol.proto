@@ -1,0 +1,130 @@
+/*
+SPDX-FileCopyrightText: 2022-present Open Networking Foundation <info@opennetworking.org>
+
+SPDX-License-Identifier: Apache-2.0
+*/
+
+syntax = "proto3";
+
+package atomix.gossip.v1;
+
+import "google/protobuf/duration.proto";
+import "atomix/runtime/v1/timestamp.proto";
+import "gogoproto/gogo.proto";
+
+service Gossip {
+    rpc ReadAll (ReadAllRequest) returns (stream ReadAllResponse);
+    rpc Read (ReadRequest) returns (ReadResponse);
+    rpc Gossip (stream GossipMessage) returns (stream GossipMessage);
+}
+
+message PrimitiveId {
+    string type = 1 [
+        (gogoproto.casttype) = "PrimitiveType"
+    ];
+    string cluster = 2;
+    string name = 3;
+}
+
+message RequestHeader {
+    uint32 partition_id = 1 [
+        (gogoproto.customname) = "PartitionID",
+        (gogoproto.casttype) = "PartitionID"
+    ];
+    PrimitiveId primitive_id = 2 [
+        (gogoproto.customname) = "PrimitiveID",
+        (gogoproto.nullable) = false
+    ];
+    string member_id = 3 [
+        (gogoproto.customname) = "MemberID",
+        (gogoproto.casttype) = "MemberID"
+    ];
+    atomix.runtime.v1.Timestamp timestamp = 4 [
+        (gogoproto.nullable) = false
+    ];
+}
+
+message ResponseHeader {
+    atomix.runtime.v1.Timestamp timestamp = 1 [
+        (gogoproto.nullable) = false
+    ];
+}
+
+message ReadAllRequest {
+    RequestHeader header = 1 [
+        (gogoproto.nullable) = false
+    ];
+}
+
+message ReadAllResponse {
+    ResponseHeader header = 1 [
+        (gogoproto.nullable) = false
+    ];
+    Object object = 2 [
+        (gogoproto.nullable) = false
+    ];
+}
+
+message ReadRequest {
+    RequestHeader header = 1 [
+        (gogoproto.nullable) = false
+    ];
+    atomix.runtime.v1.Timestamp timestamp = 2 [
+        (gogoproto.nullable) = false
+    ];
+    string key = 3;
+}
+
+message ReadResponse {
+    ResponseHeader header = 1 [
+        (gogoproto.nullable) = false
+    ];
+    Object object = 2;
+}
+
+message Object {
+    atomix.runtime.v1.Timestamp timestamp = 1 [
+        (gogoproto.nullable) = false
+    ];
+    string key = 2;
+    bytes value = 3;
+}
+
+message GossipMessage {
+    oneof message {
+        Initialize initialize = 1;
+        Advertise advertise = 2;
+        Update update = 3;
+    }
+}
+
+message GossipHeader {
+    atomix.runtime.v1.Timestamp timestamp = 1 [
+        (gogoproto.nullable) = false
+    ];
+}
+
+message Initialize {
+    RequestHeader header = 1 [
+        (gogoproto.nullable) = false
+    ];
+}
+
+message Advertise {
+    GossipHeader header = 1 [
+        (gogoproto.nullable) = false
+    ];
+    atomix.runtime.v1.Timestamp timestamp = 2 [
+        (gogoproto.nullable) = false
+    ];
+    string key = 3;
+}
+
+message Update {
+    GossipHeader header = 1 [
+        (gogoproto.nullable) = false
+    ];
+    Object object = 2 [
+        (gogoproto.nullable) = false
+    ];
+}
