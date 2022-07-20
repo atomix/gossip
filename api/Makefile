@@ -2,13 +2,14 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-RUNTIME_DIR ?= .
+build:
+	go build ./...
 
-build: go
+generate: go
 
 go:
 	@find . -name '*.pb.go' -delete
 	docker run -it \
 		-v `pwd`:/build \
 		atomix/codegen:go-latest \
-	    --proto-path . --go-path . --import-path github.com/atomix/gossip/api
+	    --proto-path . --go-path . --import-path github.com/atomix/gossip-storage/api

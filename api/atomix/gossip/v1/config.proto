@@ -1,0 +1,56 @@
+/*
+SPDX-FileCopyrightText: 2022-present Open Networking Foundation <info@opennetworking.org>
+
+SPDX-License-Identifier: Apache-2.0
+*/
+
+syntax = "proto3";
+
+package atomix.gossip.v1;
+
+import "google/protobuf/duration.proto";
+import "gogoproto/gogo.proto";
+
+message GossipConfig {
+    google.protobuf.Duration gossip_period = 1 [
+        (gogoproto.stdduration) = true
+    ];
+    google.protobuf.Duration anti_entropy_period = 2 [
+        (gogoproto.stdduration) = true
+    ];
+}
+
+message ClusterConfig {
+    repeated ReplicaConfig replicas = 1 [
+        (gogoproto.nullable) = false
+    ];
+    repeated PeerGroupConfig groups = 2 [
+        (gogoproto.nullable) = false
+    ];
+}
+
+message ReplicaConfig {
+    uint64 replica_id = 1 [
+        (gogoproto.customname) = "ReplicaID",
+        (gogoproto.casttype) = "ReplicaID"
+    ];
+    string host = 2;
+    int32 port = 3;
+}
+
+message PeerGroupConfig {
+    uint32 partition_id = 1 [
+        (gogoproto.customname) = "PeerGroupID",
+        (gogoproto.casttype) = "PeerGroupID"
+    ];
+    repeated PeerConfig peers = 2 [
+        (gogoproto.nullable) = false
+    ];
+}
+
+message PeerConfig {
+    uint64 peer_id = 1 [
+        (gogoproto.customname) = "PeerID",
+        (gogoproto.casttype) = "PeerID"
+    ];
+}
